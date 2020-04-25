@@ -4,6 +4,7 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
+
 import firebase_admin
 from firebase_admin import credentials, firestore
 
@@ -34,13 +35,13 @@ class FireStore(object):
         nse_top_losers = self.db.collection(u'nse').document(u'top_losers')
         bse_top_losers = self.db.collection(u'bse').document(u'top_losers')
 
-        self.batch.update(top_news, item['news']["0"])
-        self.batch.update(market_action, item["market_action_index"])
-        self.batch.update(nse_most_active, item["nse_most_active"])
-        self.batch.update(bse_most_active, item["bse_most_active"])
-        self.batch.update(nse_top_gainers, item["nse_top_gainers"])
-        self.batch.update(bse_top_gainers, item["bse_top_gainers"])
-        self.batch.update(nse_top_losers, item["nse_top_losers"])
-        self.batch.update(bse_top_losers, item["bse_top_losers"])
+        self.batch.update(top_news, item['news'])
+        # self.batch.update(market_action, item["market_action_index"])
+        # self.batch.update(nse_most_active, dict(item)["nse_most_active"])
+        # self.batch.update(bse_most_active, dict(item)["bse_most_active"])
+        # self.batch.update(nse_top_gainers, dict(item)["nse_top_gainers"])
+        # self.batch.update(bse_top_gainers, dict(item)["bse_top_gainers"])
+        # self.batch.update(nse_top_losers, dict(item)["nse_top_losers"])
+        # self.batch.update(bse_top_losers, dict(item)["bse_top_losers"])
 
         return item

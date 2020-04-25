@@ -8,7 +8,7 @@
 import scrapy
 
 
-class StockscraperItem(scrapy.Item):
+class StocksscraperItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     pass

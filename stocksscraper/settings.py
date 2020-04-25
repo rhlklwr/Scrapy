@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for StockScraper project
+# Scrapy settings for stocksscraper project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,14 +9,14 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'StockScraper'
+BOT_NAME = 'stocksscraper'
 
-SPIDER_MODULES = ['StockScraper.spiders']
-NEWSPIDER_MODULE = 'StockScraper.spiders'
+SPIDER_MODULES = ['stocksscraper.spiders']
+NEWSPIDER_MODULE = 'stocksscraper.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'StockScraper (+http://www.yourdomain.com)'
+#USER_AGENT = 'stocksscraper (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -47,13 +47,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'StockScraper.middlewares.StockscraperSpiderMiddleware': 543,
+#    'stocksscraper.middlewares.StocksscraperSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'StockScraper.middlewares.StockscraperDownloaderMiddleware': 543,
+#    'stocksscraper.middlewares.StocksscraperDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
