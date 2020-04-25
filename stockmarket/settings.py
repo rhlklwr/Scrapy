@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for stocksscraper project
+# Scrapy settings for stockmarket project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,14 +9,14 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'stocksscraper'
+BOT_NAME = 'stockmarket'
 
-SPIDER_MODULES = ['stocksscraper.spiders']
-NEWSPIDER_MODULE = 'stocksscraper.spiders'
+SPIDER_MODULES = ['stockmarket.spiders']
+NEWSPIDER_MODULE = 'stockmarket.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'stocksscraper (+http://www.yourdomain.com)'
+#USER_AGENT = 'stockmarket (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -47,13 +47,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'stocksscraper.middlewares.StocksscraperSpiderMiddleware': 543,
+#    'stockmarket.middlewares.StockmarketSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'stocksscraper.middlewares.StocksscraperDownloaderMiddleware': 543,
+#    'stockmarket.middlewares.StockmarketDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
@@ -65,7 +65,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'StockScraper.pipelines.FireStore': 100,
+   'stockmarket.pipelines.FireStore': 100,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

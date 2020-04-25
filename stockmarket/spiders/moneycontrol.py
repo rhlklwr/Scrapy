@@ -5,7 +5,7 @@ import scrapy
 class MoneycontrolSpider(scrapy.Spider):
     name = 'moneycontrol'
     allowed_domains = ['www.moneycontrol.com']
-    start_urls = ['http://www.moneycontrol.com']
+    start_urls = ['http://www.moneycontrol.com/']
 
     def parse(self, response):
         top_news = response.xpath("//ul[@class='tabs_nwsconlist']/li/a")[0:5]
