@@ -5,21 +5,23 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 
-import json
 import firebase_admin
 from firebase_admin import credentials, firestore
-from stockmarket.items import *
 
-class FireStore(object):
+
+def intialise_firestore():
+    cred = credentials.Certificate("./ServiceAccountKey.json")
+    app = firebase_admin.initialize_app(cred)
+
+    # Instantiate Firestore class
+    db = firestore.client()
+    return db
+
+class Moneycontrol(object):
 
     def open_spider(self, spider):
-        # Authentication with Firebase
-        self.cred = credentials.Certificate("./ServiceAccountKey.json")
-        self.app = firebase_admin.initialize_app(self.cred)
-
-        # Instantiate Firestore class
-        self.db = firestore.client()
-
+        self.db = intialise_firestore()
+        firebase_admin.get_app()
         # Instantiate batch class to update data in single batch
         self.batch = self.db.batch()
 
@@ -52,5 +54,23 @@ class FireStore(object):
             self.batch.update(bse_top_losers, dict(item)['bse_top_losers'])
         if 'market_action_index' in dict(item):
             self.batch.update(market_action, dict(item)['market_action_index'])
+
+        return item
+
+
+class EconomicTimes(object):
+
+    def open_spider(self, spider):
+        self.db = intialise_firestore()
+        # Instantiate batch class to update data in single batch
+        self.batch = self.db.batch()
+
+    def close_spider(self, spider):
+        self.batch.commit()
+
+    def process_item(self, item, spider):
+        top_news = self.db.collection(u'News').document(u'EconomicTimes')
+        if 'news' in dict(item):
+            self.batch.update(top_news, dict(item)['news'])
 
         return item

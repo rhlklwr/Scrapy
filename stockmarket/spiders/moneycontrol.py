@@ -5,6 +5,11 @@ import scrapy
 class MoneycontrolSpider(scrapy.Spider):
     name = 'moneycontrol'
     allowed_domains = ['www.moneycontrol.com']
+    custom_settings = {
+        'ITEM_PIPELINES': {
+            'stockmarket.pipelines.Moneycontrol': 100
+        }
+    }
 
     def start_requests(self):
         yield scrapy.Request(url='http://www.moneycontrol.com/', callback=self.parse, headers={
