@@ -5,10 +5,10 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 
-
+import json
 import firebase_admin
 from firebase_admin import credentials, firestore
-
+from stockmarket.items import *
 
 class FireStore(object):
 
@@ -36,13 +36,21 @@ class FireStore(object):
         nse_top_losers = self.db.collection(u'nse').document(u'top_losers')
         bse_top_losers = self.db.collection(u'bse').document(u'top_losers')
 
-        self.batch.update(top_news, item['news'])
-        # self.batch.update(market_action, item["market_action_index"])
-        # self.batch.update(nse_most_active, dict(item)["nse_most_active"])
-        # self.batch.update(bse_most_active, dict(item)["bse_most_active"])
-        # self.batch.update(nse_top_gainers, dict(item)["nse_top_gainers"])
-        # self.batch.update(bse_top_gainers, dict(item)["bse_top_gainers"])
-        # self.batch.update(nse_top_losers, dict(item)["nse_top_losers"])
-        # self.batch.update(bse_top_losers, dict(item)["bse_top_losers"])
+        if 'news' in dict(item):
+            self.batch.update(top_news, dict(item)['news'])
+        if 'nse_most_active' in dict(item):
+            self.batch.update(nse_most_active, dict(item)['nse_most_active'])
+        if 'bse_most_active' in dict(item):
+            self.batch.update(bse_most_active, dict(item)['bse_most_active'])
+        if 'nse_top_gainers' in dict(item):
+            self.batch.update(nse_top_gainers, dict(item)['nse_top_gainers'])
+        if 'bse_top_gainers' in dict(item):
+            self.batch.update(bse_top_gainers, dict(item)['bse_top_gainers'])
+        if 'nse_top_losers' in dict(item):
+            self.batch.update(nse_top_losers, dict(item)['nse_top_losers'])
+        if 'bse_top_losers' in dict(item):
+            self.batch.update(bse_top_losers, dict(item)['bse_top_losers'])
+        if 'market_action_index' in dict(item):
+            self.batch.update(market_action, dict(item)['market_action_index'])
 
         return item
