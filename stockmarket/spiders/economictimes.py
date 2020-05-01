@@ -6,11 +6,11 @@ class EconomictimesSpider(scrapy.Spider):
     name = 'economictimes'
     allowed_domains = ['economictimes.indiatimes.com']
     start_urls = ['http://economictimes.indiatimes.com/']
-    custom_settings = {
-        'ITEM_PIPELINES': {
-            'stockmarket.pipelines.EconomicTimes': 150
-        }
-    }
+    # custom_settings = {
+    #     'ITEM_PIPELINES': {
+    #         'stockmarket.pipelines.EconomicTimes': 150
+    #     }
+    # }
     def start_requests(self):
         yield scrapy.Request(url='http://economictimes.indiatimes.com/', callback=self.parse, headers={
             'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64)\
@@ -24,7 +24,7 @@ class EconomictimesSpider(scrapy.Spider):
             title = news.xpath(".//text()").get()
             absolute_link = response.urljoin(link)
             yield {
-                "news": {
+                "e_news": {
                     f"{idx + 1}": {
                         "link": absolute_link,
                         "title": title
