@@ -8,20 +8,17 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
 
+cred = credentials.Certificate("./ServiceAccountKey.json")
+app = firebase_admin.initialize_app(cred)
 
-def intialise_firestore():
-    cred = credentials.Certificate("./ServiceAccountKey.json")
-    app = firebase_admin.initialize_app(cred)
+# Instantiate Firestore class
+default_db = firestore.client()
 
-    # Instantiate Firestore class
-    db = firestore.client()
-    return db
 
 class Moneycontrol(object):
 
-    def open_spider(self, spider):
-        self.db = intialise_firestore()
-        firebase_admin.get_app()
+    def open_spider(self, spider, db=default_db):
+        self.db = db
         # Instantiate batch class to update data in single batch
         self.batch = self.db.batch()
 
@@ -38,8 +35,8 @@ class Moneycontrol(object):
         nse_top_losers = self.db.collection(u'nse').document(u'top_losers')
         bse_top_losers = self.db.collection(u'bse').document(u'top_losers')
 
-        if 'news' in dict(item):
-            self.batch.update(top_news, dict(item)['news'])
+        if 'm_news' in dict(item):
+            self.batch.update(top_news, dict(item)['m_news'])
         if 'nse_most_active' in dict(item):
             self.batch.update(nse_most_active, dict(item)['nse_most_active'])
         if 'bse_most_active' in dict(item):
@@ -60,8 +57,8 @@ class Moneycontrol(object):
 
 class EconomicTimes(object):
 
-    def open_spider(self, spider):
-        self.db = intialise_firestore()
+    def open_spider(self, spider, db=default_db):
+        self.db = db
         # Instantiate batch class to update data in single batch
         self.batch = self.db.batch()
 
@@ -70,7 +67,7 @@ class EconomicTimes(object):
 
     def process_item(self, item, spider):
         top_news = self.db.collection(u'News').document(u'EconomicTimes')
-        if 'news' in dict(item):
-            self.batch.update(top_news, dict(item)['news'])
+        if 'e_news' in dict(item):
+            self.batch.update(top_news, dict(item)['e_news'])
 
         return item
