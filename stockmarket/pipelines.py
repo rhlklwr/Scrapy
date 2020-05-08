@@ -26,31 +26,27 @@ class Moneycontrol(object):
         self.batch.commit()
 
     def process_item(self, item, spider):
-        top_news = self.db.collection(u'News').document(u'Moneycontrol')
-        market_action = self.db.collection(u'Market_Index').document(u'Indexes')
-        nse_most_active = self.db.collection(u'nse').document(u'most_active')
-        bse_most_active = self.db.collection(u'bse').document(u'most_active')
-        nse_top_gainers = self.db.collection(u'nse').document(u'top_gainers')
-        bse_top_gainers = self.db.collection(u'bse').document(u'top_gainers')
-        nse_top_losers = self.db.collection(u'nse').document(u'top_losers')
-        bse_top_losers = self.db.collection(u'bse').document(u'top_losers')
+        news = self.db.collection(u'news').document()
+        nse = self.db.collection(u'nse').document()
+        bse = self.db.collection(u'bse').document()
+        market = self.db.collection(u'market').document()
 
-        if 'm_news' in dict(item):
-            self.batch.update(top_news, dict(item)['m_news'])
-        if 'nse_most_active' in dict(item):
-            self.batch.update(nse_most_active, dict(item)['nse_most_active'])
-        if 'bse_most_active' in dict(item):
-            self.batch.update(bse_most_active, dict(item)['bse_most_active'])
-        if 'nse_top_gainers' in dict(item):
-            self.batch.update(nse_top_gainers, dict(item)['nse_top_gainers'])
-        if 'bse_top_gainers' in dict(item):
-            self.batch.update(bse_top_gainers, dict(item)['bse_top_gainers'])
-        if 'nse_top_losers' in dict(item):
-            self.batch.update(nse_top_losers, dict(item)['nse_top_losers'])
-        if 'bse_top_losers' in dict(item):
-            self.batch.update(bse_top_losers, dict(item)['bse_top_losers'])
-        if 'market_action_index' in dict(item):
-            self.batch.update(market_action, dict(item)['market_action_index'])
+        if 'm_news' in item:
+            self.batch.set(news, item['m_news'])
+        if 'nse_most_active' in item:
+            self.batch.set(nse, item['nse_most_active'])
+        if 'bse_most_active' in item:
+            self.batch.set(bse, item['bse_most_active'])
+        if 'nse_top_gainers' in item:
+            self.batch.set(nse, item['nse_top_gainers'])
+        if 'bse_top_gainers' in item:
+            self.batch.set(bse, item['bse_top_gainers'])
+        if 'nse_top_losers' in item:
+            self.batch.set(nse, item['nse_top_losers'])
+        if 'bse_top_losers' in item:
+            self.batch.set(bse, item['bse_top_losers'])
+        if 'market_action' in item:
+            self.batch.set(market, item['market_action'])
 
         return item
 
@@ -66,8 +62,8 @@ class EconomicTimes(object):
         self.batch.commit()
 
     def process_item(self, item, spider):
-        top_news = self.db.collection(u'News').document(u'EconomicTimes')
-        if 'e_news' in dict(item):
-            self.batch.update(top_news, dict(item)['e_news'])
+        news = self.db.collection(u'news').document()
+        if 'e_news' in item:
+            self.batch.update(news, item['e_news'])
 
         return item

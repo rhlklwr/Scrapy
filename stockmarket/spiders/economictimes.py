@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
-
+from stockmarket.items import News
 
 class EconomictimesSpider(scrapy.Spider):
     name = 'economictimes'
@@ -19,15 +19,12 @@ class EconomictimesSpider(scrapy.Spider):
 
     def parse(self, response):
         top_news = response.xpath("////li[@data-ga-action='Widget Top News']/ul/li")[0:10]
-        for idx, news in enumerate(top_news):
-            link = news.xpath(".//@href").get()
-            title = news.xpath(".//text()").get()
-            absolute_link = response.urljoin(link)
+        news = News()
+        for idx, entries in top_news:
+            link = entries.xpath(".//@href").get()
+            news['title'] = entries.xpath(".//text()").get()
+            news['link'] = response.urljoin(link)
+            news['source'] = 'economictimes'
             yield {
-                "e_news": {
-                    f"{idx + 1}": {
-                        "link": absolute_link,
-                        "title": title
-                    }
-                }
+                'e_news': news
             }

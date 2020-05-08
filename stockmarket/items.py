@@ -8,7 +8,18 @@
 import scrapy
 
 
-class StockmarketItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class Stock(scrapy.Item):
+    id = scrapy.Field()
+    name = scrapy.Field()
+    value = scrapy.Field()
+    valueDifference = scrapy.Field()
+    percentDifference = scrapy.Field()
+    isNegative = scrapy.Field()
+    group = scrapy.Field()
+
+
+class News(scrapy.Item):
+    id = scrapy.Field()
+    link = scrapy.Field()
+    title = scrapy.Field()
+    source = scrapy.Field()
