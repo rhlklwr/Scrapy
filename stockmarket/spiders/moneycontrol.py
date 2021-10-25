@@ -3,6 +3,32 @@ import scrapy
 from stockmarket.items import Stock, News
 
 
+def news_parser(parsed_object, name):
+    news = News()
+    for entries in parsed_object:
+        news['link'] = entries.xpath(".//@href").get()
+        news['title'] = entries.xpath(".//@title").get()
+        news['source'] = 'Moneycontrol'
+        yield {
+            name: news
+        }
+
+
+def stock_parser(parsed_object, name):
+    stock = Stock()
+    for entries in parsed_object:
+        stock['name'] = entries.xpath(".//td/a/@title").get()
+        stock['value'] = entries.xpath(".//td")[1].xpath(".//text()").get()
+        stock['valueDifference'] = entries.xpath(".//td")[2].xpath(".//text()").get()
+        if name not in ['nse_most_active', 'bse_most_active']:
+            stock['percentDifference'] = entries.xpath(".//td")[3].xpath(".//text()").get()
+        stock['isNegative'] = True if float(stock['valueDifference']) < 0 else False
+        stock['group'] = 'MOST_ACTIVE'
+        yield {
+            name: stock
+        }
+
+
 class MoneycontrolSpider(scrapy.Spider):
     name = 'moneycontrol'
     allowed_domains = ['www.moneycontrol.com']
@@ -19,98 +45,15 @@ class MoneycontrolSpider(scrapy.Spider):
         })
 
     def parse(self, response):
-        top_news = response.xpath("//ul[@class='tabs_nwsconlist']/li/a")[0:5]
-        market_action = response.xpath("//table[@class='rhsglTbl']/tbody")[0].xpath(".//tr")
-        nse_most_active = response.xpath("//table[@class='rhsglTbl']/tbody")[2].xpath(".//tr")
-        bse_most_active = response.xpath("//table[@class='rhsglTbl']/tbody")[3].xpath(".//tr")
-        nse_top_gainers = response.xpath("//table[@class='rhsglTbl']/tbody")[4].xpath(".//tr")
-        bse_top_gainers = response.xpath("//table[@class='rhsglTbl']/tbody")[5].xpath(".//tr")
-        nse_top_losers = response.xpath("//table[@class='rhsglTbl']/tbody")[6].xpath(".//tr")
-        bse_top_losers = response.xpath("//table[@class='rhsglTbl']/tbody")[7].xpath(".//tr")
 
-        news = News()
-        for entries in top_news:
-            news['link'] = entries.xpath(".//@href").get()
-            news['title'] = entries.xpath(".//@title").get()
-            news['source'] = 'Moneycontrol'
-            yield {
-                'm_news': news
-            }
+        news_parser(response.xpath("//ul[@class='tabs_nwsconlist']/li/a")[0:5], 'm_news')
+        stock_parser(response.xpath("//table[@class='rhsglTbl']/tbody")[2].xpath(".//tr"), 'nse_most_active')
+        stock_parser(response.xpath("//table[@class='rhsglTbl']/tbody")[3].xpath(".//tr"), 'bse_most_active')
+        stock_parser(response.xpath("//table[@class='rhsglTbl']/tbody")[4].xpath(".//tr"), 'nse_top_gainers')
+        stock_parser(response.xpath("//table[@class='rhsglTbl']/tbody")[5].xpath(".//tr"), 'bse_top_gainers')
+        stock_parser(response.xpath("//table[@class='rhsglTbl']/tbody")[6].xpath(".//tr"), 'nse_top_losers')
+        stock_parser(response.xpath("//table[@class='rhsglTbl']/tbody")[7].xpath(".//tr"), 'bse_top_losers')
+        stock_parser(response.xpath("//table[@class='rhsglTbl']/tbody")[0].xpath(".//tr"), 'market_action')
 
-        stock = Stock()
-        for entries in nse_most_active:
-            stock['name'] = entries.xpath(".//td/a/@title").get()
-            stock['value'] = entries.xpath(".//td")[1].xpath(".//text()").get()
-            stock['valueDifference'] = entries.xpath(".//td")[2].xpath(".//text()").get()
-            # stock['value'] = entries.xpath(".//td")[3].xpath(".//text()").get()
-            stock['isNegative'] = True if float(stock['valueDifference']) < 0 else False
-            stock['group'] = 'MOST_ACTIVE'
-            yield {
-                'nse_most_active': stock
-            }
 
-        for entries in bse_most_active:
-            stock['name'] = entries.xpath(".//td/a/@title").get()
-            stock['value'] = entries.xpath(".//td")[1].xpath(".//text()").get()
-            stock['valueDifference'] = entries.xpath(".//td")[2].xpath(".//text()").get()
-            # stock['value'] = entries.xpath(".//td")[3].xpath(".//text()").get()
-            stock['isNegative'] = True if float(stock['valueDifference']) < 0 else False
-            stock['group'] = 'MOST_ACTIVE'
-            yield {
-                'bse_most_active': stock
-            }
 
-        for entries in nse_top_gainers:
-            stock['name'] = entries.xpath(".//td/a/@title").get()
-            stock['value'] = entries.xpath(".//td")[1].xpath(".//text()").get()
-            stock['valueDifference'] = entries.xpath(".//td")[2].xpath(".//text()").get()
-            stock['percentDifference'] = entries.xpath(".//td")[3].xpath(".//text()").get()
-            stock['isNegative'] = True if float(stock['valueDifference']) < 0 else False
-            stock['group'] = 'TOP_GAINERS'
-            yield {
-                'nse_top_gainers': stock
-            }
-
-        for entries in bse_top_gainers:
-            stock['name'] = entries.xpath(".//td/a/@title").get()
-            stock['value'] = entries.xpath(".//td")[1].xpath(".//text()").get()
-            stock['valueDifference'] = entries.xpath(".//td")[2].xpath(".//text()").get()
-            stock['percentDifference'] = entries.xpath(".//td")[3].xpath(".//text()").get()
-            stock['isNegative'] = True if float(stock['valueDifference']) < 0 else False
-            stock['group'] = 'TOP_GAINERS'
-            yield {
-                'bse_top_gainers': stock
-            }
-
-        for entries in nse_top_losers:
-            stock['name'] = entries.xpath(".//td/a/@title").get()
-            stock['value'] = entries.xpath(".//td")[1].xpath(".//text()").get()
-            stock['valueDifference'] = entries.xpath(".//td")[2].xpath(".//text()").get()
-            stock['percentDifference'] = entries.xpath(".//td")[3].xpath(".//text()").get()
-            stock['isNegative'] = True if float(stock['valueDifference']) < 0 else False
-            stock['group'] = 'TOP_LOSERS'
-            yield {
-                'nse_top_losers': stock
-            }
-
-        for entries in bse_top_losers:
-            stock['name'] = entries.xpath(".//td/a/@title").get()
-            stock['value'] = entries.xpath(".//td")[1].xpath(".//text()").get()
-            stock['valueDifference'] = entries.xpath(".//td")[2].xpath(".//text()").get()
-            stock['percentDifference'] = entries.xpath(".//td")[3].xpath(".//text()").get()
-            stock['isNegative'] = True if float(stock['valueDifference']) < 0 else False
-            stock['group'] = 'TOP_LOSERS'
-            yield {
-                'bse_top_losers': stock
-            }
-
-        for entries in market_action:
-            stock['name'] = entries.xpath(".//td//h3/a/@title").get()
-            stock['value'] = entries.xpath(".//td")[1].xpath(".//text()").get()
-            stock['valueDifference'] = entries.xpath(".//td")[2].xpath(".//text()").get()
-            stock['percentDifference'] = entries.xpath(".//td")[3].xpath(".//text()").get()
-            stock['isNegative'] = True if float(stock['valueDifference']) < 0 else False
-            stock['group'] = 'INDEX'
-            yield {
-                'market_action': stock
-            }

@@ -32,11 +32,11 @@ class Moneycontrol(object):
         market = self.db.collection(u'market').document()
 
         if 'm_news' in item:
-            self.batch.set(news, item['m_news'])
+            news.set(item['m_news'])
         if 'nse_most_active' in item:
-            self.batch.set(nse, item['nse_most_active'])
+            self.batch.update(nse, item['nse_most_active'])
         if 'bse_most_active' in item:
-            self.batch.set(bse, item['bse_most_active'])
+            self.batch.update(bse, item['bse_most_active'])
         if 'nse_top_gainers' in item:
             self.batch.set(nse, item['nse_top_gainers'])
         if 'bse_top_gainers' in item:
